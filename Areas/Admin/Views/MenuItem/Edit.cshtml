@@ -1,0 +1,94 @@
+﻿@model SpiceApp.Models.ViewModels.MenuItemAndCategoryViewModel
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<form asp-area="Admin" asp-controller="MenuItem" asp-action="Edit" class="col-6" method="post" enctype="multipart/form-data">
+    <div class="border backgroundWhite">
+        <input type="hidden" asp-for="MenuItem.Id"/>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="form-group">
+                <label for="inputItem">Item Name</label>
+                <input asp-for="MenuItem.Name" type="text" class="form-control" id="inputItem" placeholder="Enter Item Name">
+                <span asp-validation-for="MenuItem.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="inputDescription">Item Description</label>
+                <input asp-for="MenuItem.Description" type="text" class="form-control" id="inputDescription" placeholder="Enter Item Description">
+            </div>
+
+            <div class="form-group">
+                <label for="inputprice">Item Price</label>
+                <input asp-for="MenuItem.price" type="text" class="form-control" id="inputprice" placeholder="Enter Item price">
+                <span asp-validation-for="MenuItem.price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MenuItem.Image"></label>
+                <input type="file" name="files" multiple class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="categorySelect">Select Category</label>
+                <select class="form-control" id="categorySelect" asp-for="MenuItem.CategoryId"
+                        asp-items="@(new SelectList(Model.CategoryList,"Id","Name"))">
+                </select>
+                <label for="ddlCategoryList">Select Sub Category</label>
+                <select id="ddlCategoryList" asp-for="MenuItem.SubCategoryId"
+                        asp-items="@(new SelectList(Model.SubCategoryList,"Id","Name"))"
+                        class="form-control">
+                </select>
+            </div>
+        </div>
+        <div class="col-3 offset-1">
+            <img src="@Model.MenuItem.Image" width="100%" style="border-radius:5px; border: 1px solid #bbb9b9" />
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary offset-1">Edit</button>
+</form>
+
+
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function updateSubCategoryList() {
+            var categorySelected = document.getElementById("categorySelect").value;
+            $list = $('#ddlCategoryList');
+            $.ajax({
+                url: '/Admin/SubCategory/GetSubCategory/' + categorySelected,
+                type: 'Get',
+                dataType: 'text',
+                success: function (data) {
+                    results = JSON.parse(data);
+                    var categories = "";
+                    for (i in results) {
+                        categories = categories + ('<option value="' + results[i].value + '">' + results[i].text + '</option>');
+                    }
+                    $list.empty();
+                    $list.append(categories);
+                }
+            });
+
+
+        }
+
+        $(document).ready(function () {
+            updateSubCategoryList();
+        });
+
+        $("#categorySelect").on("change", function () {
+            updateSubCategoryList();
+        });
+    </script>
+}
+

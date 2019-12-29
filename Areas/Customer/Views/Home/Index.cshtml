@@ -1,0 +1,45 @@
+﻿@model SpiceApp.Models.ViewModels.IndexViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<br />
+<div class="backgroundWhite container">
+
+    <ul id="menu-filters" class="menu-filter-list list-inline text-center">
+        <li class="filter active btn btn-secondary ml-1 mr-1" data-filter=".menu-restaurant">Show All</li>
+
+        @foreach (var item in Model.Category)
+        {
+            <li class="filter ml-1 mr-1" data-filter=".@item.Name.Replace(" ",string.Empty)">@item.Name</li>
+        }
+    </ul>
+
+    @foreach (var category in Model.Category)
+    {
+        <div class="row" id="menu-wrapper">
+            <partial name="_ThumbnailAreaPartial" model="@Model.MenuItem.Where(u => u.Category.Name.Equals(category.Name)) " />
+        </div>
+    }
+</div>
+
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script>
+        var posts = $('post');
+
+        (function ($) {
+            $("#menu-filters li").click(function () {
+                $("#menu-filters li").removeClass('active btn btn-secondary');
+                $(this).addClass('active btn btn-secondary');
+                var selectedFilter = $(this).data("filter");
+                $(".menu-restaurant").fadeOut();
+                setTimeout(function () {
+                    $(selectedFilter).slideDown();
+                }, 300);
+            });
+        })(jQuery);
+    </script>
+
+}

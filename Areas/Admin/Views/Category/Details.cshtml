@@ -1,0 +1,22 @@
+﻿@model SpiceApp.Models.Category
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Details</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input readonly asp-for="Name" class="form-control" />
+            </div>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+    </div>
+</div>
+
+
